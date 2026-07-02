@@ -1,0 +1,183 @@
+:root {
+  --bg: #716b4e;
+  --text: #f4d2a8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  color: var(--text);
+}
+
+/*
+  A TV fica deitada fisicamente 90° no sentido anti-horário.
+  Por isso o conteúdo é desenhado em pé (portrait) e girado
+  +90° (horário) aqui na tela, para compensar e aparecer
+  em pé para quem olha o totem.
+*/
+.rotate-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100vh;
+  height: 100vw;
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center center;
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(255, 255, 255, 0.06), transparent 60%),
+    linear-gradient(180deg, #7d7650 0%, #4a4530 45%, #49402b 80%, #504530 100%);
+  overflow: hidden;
+}
+
+/* leve textura/vinheta para lembrar o fundo da referência */
+.screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* linha de luz que percorre a borda da tela */
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 3px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0deg,
+    transparent 260deg,
+    var(--text) 300deg,
+    #fff 320deg,
+    var(--text) 340deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-run 4s linear infinite;
+}
+
+@keyframes border-run {
+  to { --angle: 360deg; }
+}
+
+.header {
+  padding: 48px 32px 0 32px;
+  z-index: 1;
+  text-align: center;
+}
+
+.title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 700;
+  font-size: 68px;
+  letter-spacing: 10px;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: 2px;
+  color: var(--text);
+  opacity: 0.9;
+  margin-top: 12px;
+}
+
+.content {
+  flex: 1;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.main-media {
+  max-width: 105%;
+  max-height: 122%;
+  object-fit: contain;
+}
+
+.options {
+  z-index: 1;
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+}
+
+.option-btn {
+  flex: 1;
+  min-height: 68px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(244, 210, 168, 0.35);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 1.5px;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, background 0.15s ease,
+              border-color 0.15s ease, transform 0.08s ease;
+}
+
+.option-btn:active {
+  transform: scale(0.97);
+}
+
+/* estado "aceso" ao selecionar, igual ao botão JEANS na referência */
+.option-btn.active {
+  background: rgba(244, 210, 168, 0.12);
+  border-color: var(--text);
+  box-shadow:
+    0 0 8px 2px rgba(244, 210, 168, 0.5),
+    0 0 18px 6px rgba(244, 210, 168, 0.28),
+    inset 0 0 6px rgba(244, 210, 168, 0.35);
+  text-shadow: 0 0 6px rgba(244, 210, 168, 0.75);
+}
+
+/* breakpoint usa altura do viewport, pois é ela que vira a
+   largura do conteúdo depois da rotação de 90° */
+@media (max-height: 420px) {
+  .title { font-size: 44px; }
+  .subtitle { font-size: 15px; }
+  .option-btn { font-size: 13px; min-height: 60px; }
+}
