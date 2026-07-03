@@ -2,13 +2,16 @@ const buttons = document.querySelectorAll('.option-btn');
 const video = document.getElementById('mainVideo');
 
 const videoMap = {
-  jeans: 'vdo/jeans.webm',
+  jeans: 'vdo/Button 1.webm',
+  livro: 'vdo/Button 2.webm',
+  xicara: 'vdo/Button 3.webm',
+  lata: 'vdo/Button 4.webm',
 };
 
 function playItem(item) {
   const src = videoMap[item];
   if (!src) return;
-  video.src = src;
+  video.src = encodeURI(src);
   video.currentTime = 0;
   video.play();
 }
