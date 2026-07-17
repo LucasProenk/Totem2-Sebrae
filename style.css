@@ -8,6 +8,20 @@
   padding: 0;
   box-sizing: border-box;
   cursor: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* impede o Edge de desenhar seus próprios controles/ícones (Picture-in-Picture,
+   cast, play central) por cima do vídeo quando o usuário clica nos botões */
+video::-webkit-media-controls,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-picture-in-picture-button {
+  display: none !important;
 }
 
 html, body {
@@ -33,6 +47,8 @@ body {
   left: 50%;
   width: 100vh;
   height: 100vw;
+  width: 100dvh;
+  height: 100dvw;
   transform: translate(-50%, -50%) rotate(90deg);
   transform-origin: center center;
 }
@@ -103,7 +119,7 @@ body {
 }
 
 .title {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: 700;
   font-size: 68px;
   letter-spacing: 10px;
@@ -122,18 +138,145 @@ body {
 }
 
 .content {
+  position: relative;
   flex: 1;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
 }
 
+/*
+  Vídeo e hotspots ficam juntos aqui dentro e recebem o MESMO transform
+  (aplicado uma única vez, neste container pai). Isso garante que os
+  círculos clicáveis sempre se movam junto com o vídeo — nunca ajuste
+  o transform do .main-media ou do .stage-hotspots separadamente, ou
+  eles saem de alinhamento um com o outro.
+*/
+.media-stage {
+  position: relative;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: none;
+}
+
 .main-media {
-  max-width: 105%;
-  max-height: 122%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* cena rotacionada 90° (.rotate-wrapper): subir na tela final =
+     deslocar para a esquerda aqui, antes da rotação */
+  transform: translateY(-40px);
+}
+
+/*
+  A tela inteira é desenhada em pé (portrait) e girada 90° (ver
+  .rotate-wrapper). Por isso, posições "left/top" aqui dentro não
+  correspondem diretamente ao que se vê na tela já girada: o eixo
+  vertical (top) desta caixa vira o eixo horizontal depois de girar.
+  Os hotspots abaixo já foram calculados considerando essa rotação.
+*/
+.stage-hotspots {
+  position: absolute;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.stage-hotspots.active {
+  display: block;
+  pointer-events: auto;
+}
+
+.hotspot {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  /* cena rotacionada 90° (.rotate-wrapper): descer na tela final =
+     deslocar para a direita aqui, antes da rotação */
+  transform: translate(-60%, -60%) translateX(28px) translateY(-50px);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  cursor: none;
+  isolation: isolate;
+  /* halo sólido (mesma cor) que aumenta a área coberta visualmente
+     sem alterar o tamanho real do alvo de toque (width/height) */
+}
+
+/*
+  Posição de cada botão na roda (mesma posição em todos os itens,
+  só muda o data-stage/texto). Ajustar aqui em vez de no HTML.
+*/
+.hotspot[data-slot="1"] { left: 48.21%; top: 17.1%; }
+.hotspot[data-slot="2"] { left: 82%;    top: 30.48%; }
+.hotspot[data-slot="3"] { left: 87.37%; top: 53.19%; }
+.hotspot[data-slot="4"] { left: 76.67%; top: 72.66%; }
+.hotspot[data-slot="5"] { left: 46.08%; top: 86.21%; }
+.hotspot[data-slot="6"] { left: 20.17%; top: 73.89%; }
+.hotspot[data-slot="7"] { left: 8.37%;  top: 52.96%; }
+.hotspot[data-slot="8"] { left: 17.09%; top: 30.41%; }
+
+/*
+  Faixa fina encostada na borda do .content mais próxima do menu
+  (pré-rotação isso é a borda "de baixo"; depois de girar 90°, essa
+  borda vira o lado esquerdo — exatamente onde o quadrado vermelho
+  foi desenhado, colado nos botões).
+*/
+.stage-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 210px;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  padding: 20px 28px 0.1px 40px;
+  overflow: hidden;
+}
+
+.stage-panel.active {
+  display: flex;
+}
+
+.stage-panel-inner {
+  width: 100%;
+}
+
+.stage-panel-inner.animate {
+  animation: stagePanelIn 0.4s ease;
+}
+
+@keyframes stagePanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.stage-panel-title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.stage-panel-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  opacity: 0.95;
 }
 
 .options {

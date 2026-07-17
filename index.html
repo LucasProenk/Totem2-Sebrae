@@ -19,7 +19,60 @@
       </header>
 
       <main class="content">
-        <video class="main-media" id="mainVideo" playsinline muted autoplay></video>
+        <div class="media-stage">
+        <video class="main-media" id="mainVideo" playsinline muted autoplay disablePictureInPicture disableRemotePlayback controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"></video>
+
+        <div class="stage-hotspots" data-item="xicara">
+          <button type="button" class="hotspot" data-slot="1" data-stage="cultivo"></button>
+          <button type="button" class="hotspot" data-slot="2" data-stage="colheita"></button>
+          <button type="button" class="hotspot" data-slot="3" data-stage="beneficiamento"></button>
+          <button type="button" class="hotspot" data-slot="4" data-stage="distribuicao"></button>
+          <button type="button" class="hotspot" data-slot="5" data-stage="consumo"></button>
+          <button type="button" class="hotspot" data-slot="6" data-stage="residuo"></button>
+          <button type="button" class="hotspot" data-slot="7" data-stage="reaproveitamento"></button>
+          <button type="button" class="hotspot" data-slot="8" data-stage="retorno"></button>
+        </div>
+
+        <div class="stage-hotspots" data-item="jeans">
+          <button type="button" class="hotspot" data-slot="1" data-stage="cultivo"></button>
+          <button type="button" class="hotspot" data-slot="2" data-stage="tecelagem"></button>
+          <button type="button" class="hotspot" data-slot="3" data-stage="tingimento"></button>
+          <button type="button" class="hotspot" data-slot="4" data-stage="confeccao"></button>
+          <button type="button" class="hotspot" data-slot="5" data-stage="distribuicao"></button>
+          <button type="button" class="hotspot" data-slot="6" data-stage="consumo"></button>
+          <button type="button" class="hotspot" data-slot="7" data-stage="reciclagem"></button>
+          <button type="button" class="hotspot" data-slot="8" data-stage="decomposicao"></button>
+        </div>
+
+        <div class="stage-hotspots" data-item="lata">
+          <button type="button" class="hotspot" data-slot="1" data-stage="extracao"></button>
+          <button type="button" class="hotspot" data-slot="2" data-stage="refino"></button>
+          <button type="button" class="hotspot" data-slot="3" data-stage="fabricacao"></button>
+          <button type="button" class="hotspot" data-slot="4" data-stage="distribuicao"></button>
+          <button type="button" class="hotspot" data-slot="5" data-stage="consumo"></button>
+          <button type="button" class="hotspot" data-slot="6" data-stage="descarte"></button>
+          <button type="button" class="hotspot" data-slot="7" data-stage="reciclagem"></button>
+          <button type="button" class="hotspot" data-slot="8" data-stage="novavida"></button>
+        </div>
+
+        <div class="stage-hotspots" data-item="livro">
+          <button type="button" class="hotspot" data-slot="1" data-stage="cultivo"></button>
+          <button type="button" class="hotspot" data-slot="2" data-stage="extracao"></button>
+          <button type="button" class="hotspot" data-slot="3" data-stage="producao"></button>
+          <button type="button" class="hotspot" data-slot="4" data-stage="impressao"></button>
+          <button type="button" class="hotspot" data-slot="5" data-stage="distribuicao"></button>
+          <button type="button" class="hotspot" data-slot="6" data-stage="leitura"></button>
+          <button type="button" class="hotspot" data-slot="7" data-stage="reciclagem"></button>
+          <button type="button" class="hotspot" data-slot="8" data-stage="reciclado"></button>
+        </div>
+        </div>
+
+        <div class="stage-panel" id="stagePanel">
+          <div class="stage-panel-inner">
+            <h2 class="stage-panel-title" id="stagePanelTitle">CAFÉ</h2>
+            <p class="stage-panel-text" id="stagePanelText">Toque em um dos círculos para ver a história daquela etapa.</p>
+          </div>
+        </div>
       </main>
 
       <nav class="options">
@@ -32,5 +85,6 @@
   </div>
 
 <script src="script.js"></script>
+<script>document.addEventListener('contextmenu', function (e) { e.preventDefault(); });</script>
 </body>
 </html>
